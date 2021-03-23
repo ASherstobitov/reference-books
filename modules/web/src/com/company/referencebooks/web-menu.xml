@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<menu-config xmlns="http://schemas.haulmont.com/cuba/menu.xsd">
+    <menu id="application-referencebooks" insertBefore="administration" caption="mainMsg://menu_config.application-referencebooks">
+        <item screen="referencebooks_Employee.browse" caption="mainMsg://menu_config.referencebooks_Employee.browse"/>
+        <item screen="referencebooks_Department.browse"
+              caption="mainMsg://menu_config.referencebooks_Department.browse"/>
+        <item screen="referencebooks_User.browse" caption="mainMsg://menu_config.referencebooks_User.browse"/>
+    </menu>
+</menu-config>
