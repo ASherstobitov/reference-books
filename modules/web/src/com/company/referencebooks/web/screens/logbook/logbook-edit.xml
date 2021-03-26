@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/screen/window.xsd"
+        caption="msg://logbookEdit.caption"
+        focusComponent="form"
+        messagesPack="com.company.referencebooks.web.screens.logbook">
+    <data>
+        <instance id="logbookDc"
+                  class="com.company.referencebooks.entity.Logbook">
+            <view extends="_local"/>
+            <loader/>
+        </instance>
+    </data>
+    <dialogMode height="auto"
+                width="auto"/>
+    <layout expand="editActions" spacing="true">
+        <form id="form" dataContainer="logbookDc">
+            <column width="350px">
+                <textField id="codeField" property="code" editable="false"/>
+                <textField id="nameField" property="name"/>
+                <textField id="formatField" property="format"/>
+                <textField id="amountField" property="amount"/>
+            </column>
+        </form>
+        <hbox id="editActions" spacing="true">
+            <button action="windowCommitAndClose"/>
+            <button action="windowClose"/>
+        </hbox>
+    </layout>
+</window>

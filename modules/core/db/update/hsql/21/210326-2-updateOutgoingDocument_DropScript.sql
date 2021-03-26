@@ -1,0 +1,1 @@
+alter table REFERENCEBOOKS_OUTGOING_DOCUMENT drop column EMPLOYEE_ID__U02480 cascade ;

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/screen/window.xsd"
+        caption="msg://outgoingDocumentEdit.caption"
+        focusComponent="form"
+        messagesPack="com.company.referencebooks.web.screens.outgoingdocument">
+    <data>
+        <instance id="outgoingDocumentDc"
+                  class="com.company.referencebooks.entity.OutgoingDocument">
+            <view extends="_local">
+                <property name="typeDocument" view="_minimal"/>
+                <property name="company" view="_minimal"/>
+                <property name="executor" view="_minimal"/>
+                <property name="signer" view="_minimal"/>
+                <property name="author" view="_minimal"/>
+                <property name="logbook" view="_minimal"/>
+                <property name="nomenclatureCase" view="_minimal"/>
+            </view>
+            <loader/>
+        </instance>
+        <collection id="executorsDc" class="com.company.referencebooks.entity.Employee" view="_minimal">
+            <loader id="executorsDl">
+                <query>
+                    <![CDATA[select e from referencebooks_Employee e]]>
+                </query>
+            </loader>
+        </collection>
+    </data>
+    <dialogMode height="600"
+                width="800"/>
+    <layout expand="scrollBox" spacing="true">
+        <scrollBox id="scrollBox" spacing="true">
+            <form id="form" dataContainer="outgoingDocumentDc">
+                <column width="350px">
+                    <pickerField id="typeDocumentField" property="typeDocument">
+                        <actions>
+                            <action id="lookup" type="picker_lookup"/>
+                            <action id="clear" type="picker_clear"/>
+                        </actions>
+                    </pickerField>
+                    <textField id="registrationNumberField" property="registrationNumber" editable="false"/>
+                    <dateField id="registrationDateField" property="registrationDate" editable="false"/>
+                    <pickerField id="companyField" property="company">
+                        <actions>
+                            <action id="lookup" type="picker_lookup"/>
+                            <action id="clear" type="picker_clear"/>
+                        </actions>
+                    </pickerField>
+                    <textField id="recipientField" property="recipient"/>
+                    <textField id="topicField" property="topic"/>
+                    <lookupPickerField id="executorField" optionsContainer="executorsDc" property="executor"/>
+                    <pickerField id="signerField" property="signer">
+                        <actions>
+                            <action id="lookup" type="picker_lookup"/>
+                            <action id="clear" type="picker_clear"/>
+                        </actions>
+                    </pickerField>
+                    <textField id="notesField" property="notes"/>
+                    <textArea id="nameField" property="name" editable="false"/>
+                    <pickerField id="authorField" property="author">
+                        <actions>
+                            <action id="lookup" type="picker_lookup"/>
+                            <action id="clear" type="picker_clear"/>
+                        </actions>
+                    </pickerField>
+                    <dateField id="creationDateField" property="creationDate" editable="false"/>
+                    <textField id="changingDateField" property="changingDate" editable="false"/>
+                    <lookupField id="conditionField" dataContainer="outgoingDocumentDc" property="condition"/>
+                    <pickerField id="logbookField" property="logbook">
+                        <actions>
+                            <action id="lookup" type="picker_lookup"/>
+                            <action id="clear" type="picker_clear"/>
+                        </actions>
+                    </pickerField>
+                    <textArea id="contentField" property="content"/>
+                    <pickerField id="nomenclatureCaseField" property="nomenclatureCase">
+                        <actions>
+                            <action id="lookup" type="picker_lookup"/>
+                            <action id="clear" type="picker_clear"/>
+                        </actions>
+                    </pickerField>
+                    <dateField id="sentWorkDateField" property="sentWorkDate" editable="false"/>
+                </column>
+            </form>
+        </scrollBox>
+        <hbox id="editActions" spacing="true">
+            <button action="windowCommitAndClose"/>
+            <button action="windowClose"/>
+        </hbox>
+    </layout>
+</window>

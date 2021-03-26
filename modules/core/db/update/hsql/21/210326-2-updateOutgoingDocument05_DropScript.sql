@@ -1,0 +1,1 @@
+alter table REFERENCEBOOKS_OUTGOING_DOCUMENT drop column SENT_WORK__U55223 cascade ;

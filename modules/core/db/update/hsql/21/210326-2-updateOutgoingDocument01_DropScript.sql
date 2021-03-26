@@ -1,0 +1,1 @@
+alter table REFERENCEBOOKS_OUTGOING_DOCUMENT drop column AUTHOR_ID__U44248 cascade ;

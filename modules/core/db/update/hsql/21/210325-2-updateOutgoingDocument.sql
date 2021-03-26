@@ -1,0 +1,1 @@
+alter table REFERENCEBOOKS_OUTGOING_DOCUMENT add column EMPLOYEE_ID varchar(36) ;
