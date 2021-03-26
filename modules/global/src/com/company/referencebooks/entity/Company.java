@@ -1,12 +1,16 @@
 package com.company.referencebooks.entity;
 
+import com.haulmont.chile.core.annotations.NamePattern;
 import com.haulmont.cuba.core.entity.StandardEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Table(name = "REFERENCEBOOKS_COMPANY")
 @Entity(name = "referencebooks_Company")
+@NamePattern("%s|shortName")
 public class Company extends StandardEntity {
     private static final long serialVersionUID = 8511792459938552156L;
 
@@ -27,17 +31,6 @@ public class Company extends StandardEntity {
 
     @Column(name = "POST_ADDRESS")
     private String postAddress;
-
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "company")
-    private OutgoingDocument outgoingDocument;
-
-    public OutgoingDocument getOutgoingDocument() {
-        return outgoingDocument;
-    }
-
-    public void setOutgoingDocument(OutgoingDocument outgoingDocument) {
-        this.outgoingDocument = outgoingDocument;
-    }
 
     public String getPostAddress() {
         return postAddress;

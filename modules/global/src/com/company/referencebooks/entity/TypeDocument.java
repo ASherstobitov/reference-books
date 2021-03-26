@@ -3,7 +3,9 @@ package com.company.referencebooks.entity;
 import com.haulmont.chile.core.annotations.NamePattern;
 import com.haulmont.cuba.core.entity.StandardEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Table(name = "REFERENCEBOOKS_TYPR_DOCUMENT")
@@ -19,17 +21,6 @@ public class TypeDocument extends StandardEntity {
     @NotNull
     @Column(name = "NAME", nullable = false, unique = true)
     private String name;
-
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "typeDocument")
-    private OutgoingDocument outgoingDocument;
-
-    public OutgoingDocument getOutgoingDocument() {
-        return outgoingDocument;
-    }
-
-    public void setOutgoingDocument(OutgoingDocument outgoingDocument) {
-        this.outgoingDocument = outgoingDocument;
-    }
 
     public String getName() {
         return name;

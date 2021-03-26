@@ -2,18 +2,24 @@ package com.company.referencebooks.entity;
 
 import com.haulmont.chile.core.annotations.NamePattern;
 import com.haulmont.cuba.core.entity.StandardEntity;
+import com.haulmont.cuba.core.entity.annotation.PublishEntityChangedEvents;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Index;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-@Table(name = "REFERENCEBOOKS_LOGBOOK")
+@PublishEntityChangedEvents
+@Table(name = "REFERENCEBOOKS_LOGBOOK", indexes = {
+        @Index(name = "IDX_REFERENCEBOOKS_LOGBOOK", columnList = "CODE")
+})
 @Entity(name = "referencebooks_Logbook")
-@NamePattern("%s|name")
+@NamePattern("%s|code")
 public class Logbook extends StandardEntity {
     private static final long serialVersionUID = -7961839454860071249L;
 
-    @NotNull
-    @Column(name = "CODE", nullable = false, unique = true)
+    @Column(name = "CODE", unique = true)
     private String code;
 
     @Column(name = "NAME", unique = true)
@@ -25,17 +31,6 @@ public class Logbook extends StandardEntity {
 
     @Column(name = "COUNT_")
     private String amount;
-
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "logbook")
-    private OutgoingDocument outgoingDocument;
-
-    public OutgoingDocument getOutgoingDocument() {
-        return outgoingDocument;
-    }
-
-    public void setOutgoingDocument(OutgoingDocument outgoingDocument) {
-        this.outgoingDocument = outgoingDocument;
-    }
 
     public String getAmount() {
         return amount;

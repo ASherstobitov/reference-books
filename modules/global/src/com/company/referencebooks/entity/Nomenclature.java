@@ -18,16 +18,6 @@ public class Nomenclature extends StandardEntity {
 
     @Column(name = "NAME")
     private String name;
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "nomenclatureCase")
-    private OutgoingDocument outgoingDocument;
-
-    public OutgoingDocument getOutgoingDocument() {
-        return outgoingDocument;
-    }
-
-    public void setOutgoingDocument(OutgoingDocument outgoingDocument) {
-        this.outgoingDocument = outgoingDocument;
-    }
 
     public String getName() {
         return name;

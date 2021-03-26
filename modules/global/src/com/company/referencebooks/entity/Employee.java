@@ -1,6 +1,5 @@
 package com.company.referencebooks.entity;
 
-import com.haulmont.chile.core.annotations.Composition;
 import com.haulmont.chile.core.annotations.NamePattern;
 import com.haulmont.cuba.core.entity.StandardEntity;
 import com.haulmont.cuba.core.entity.annotation.OnDelete;
@@ -10,12 +9,13 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.util.List;
 
 @Table(name = "REFERENCEBOOKS_EMPLOYEE", indexes = {
         @Index(name = "IDX_REFERENCEBOOKS_EMPLOYEE", columnList = "LAST_NAME, PERSONNEL_NUMBER, DEPARTMENT_ID")
 })
 @Entity(name = "referencebooks_Employee")
-@NamePattern("%s|lastName")
+@NamePattern("%s %s|lastName,personnelNumber")
 public class Employee extends StandardEntity {
     private static final long serialVersionUID = -684329574851752601L;
 
@@ -23,24 +23,26 @@ public class Employee extends StandardEntity {
     @Column(name = "PERSONNEL_NUMBER", nullable = false, unique = true)
     private String personnelNumber;
 
+    @OneToMany(mappedBy = "executor")
+    private List<OutgoingDocument> outGoingDocuments;
+
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID", unique = true)
+    @JoinColumn(name = "USER_ID")
     @OnDelete(DeletePolicy.CASCADE)
-    @Composition
-    private User user;
+    private com.company.referencebooks.entity.User user;
 
     @NotNull
-    @Pattern(regexp = "[A-Z][a-z]*", message = "Invalid format")
+    @Pattern(message = "Invalid format", regexp = "[A-Z\u0410-\u042F][a-z\u0430-\u044F]*")
     @Column(name = "LAST_NAME", nullable = false)
     private String lastName;
 
     @NotNull
-    @Pattern(regexp = "[A-Z][a-z]*", message = "Invalid format")
+    @Pattern(message = "Invalid format", regexp = "[A-Z\u0410-\u042F][a-z\u0430-\u044F]*")
     @Column(name = "FIRST_NAME", nullable = false)
     private String firstName;
 
     @Column(name = "MIDDLE_NAME")
-    @Pattern(regexp = "[A-Z][a-z]*", message = "Invalid format")
+    @Pattern(message = "Invalid format", regexp = "[A-Z\u0410-\u042F][a-z\u0430-\u044F]*")
     private String middleName;
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -55,6 +57,22 @@ public class Employee extends StandardEntity {
     @Column(name = "PHONE_NUMBER", unique = true)
     @Pattern(regexp = "^\\d{10}$", message = "Invalid format")
     private String phoneNumber;
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public List<OutgoingDocument> getOutGoingDocuments() {
+        return outGoingDocuments;
+    }
+
+    public void setOutGoingDocuments(List<OutgoingDocument> outGoingDocuments) {
+        this.outGoingDocuments = outGoingDocuments;
+    }
 
     public String getPhoneNumber() {
         return phoneNumber;
@@ -102,14 +120,6 @@ public class Employee extends StandardEntity {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public String getPersonnelNumber() {

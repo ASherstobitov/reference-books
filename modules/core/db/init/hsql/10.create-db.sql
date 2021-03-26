@@ -110,18 +110,20 @@ create table REFERENCEBOOKS_OUTGOING_DOCUMENT (
     REGISTRATION_NUMBER varchar(255),
     REGISTRATION_DATE date,
     COMPANY_ID varchar(36) not null,
+    RECIPIENT varchar(255),
+    TOPIC varchar(255) not null,
     EXECUTOR_ID varchar(36) not null,
     SIGNER_ID varchar(36),
     NOTES varchar(255),
-    CONDITION_ varchar(255),
     NAME varchar(255) not null,
-    AUTHOR_ID varchar(36) not null,
-    CREATION_DATE varchar(255) not null,
+    AUTHOR_ID varchar(36),
+    CREATION_DATE date not null,
     CHANGING_DATE varchar(255),
+    CONDITION_ varchar(255),
     LOGBOOK_ID varchar(36),
     CONTENT varchar(255),
     NOMENCLATURE_CASE_ID varchar(36),
-    SENT_WORK date,
+    SENT_WORK_DATE date,
     --
     primary key (ID)
 )^
@@ -137,7 +139,7 @@ create table REFERENCEBOOKS_LOGBOOK (
     DELETE_TS timestamp,
     DELETED_BY varchar(50),
     --
-    CODE varchar(255) not null,
+    CODE varchar(255),
     NAME varchar(255),
     FORMAT varchar(255) not null,
     COUNT_ varchar(255),
