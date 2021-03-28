@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/screen/window.xsd"
+        caption="msg://outgoingDocumentEdit.caption"
+        focusComponent="form"
+        messagesPack="com.company.referencebooks.web.screens.outgoingdocument">
+    <data>
+        <instance id="outgoingDocumentDc"
+                  class="com.company.referencebooks.entity.OutgoingDocument">
+            <view extends="_local">
+                <property name="typeDocument" view="_minimal"/>
+                <property name="company" view="_minimal"/>
+                <property name="executor" view="_minimal"/>
+                <property name="signer" view="_minimal"/>
+                <property name="author" view="_minimal">
+                    <property name="firstName"/>
+                    <property name="lastName"/>
+                    <property name="middleName"/>
+                </property>
+                <property name="logbook" view="_minimal"/>
+                <property name="nomenclatureCase" view="_minimal"/>
+            </view>
+            <loader/>
+        </instance>
+        <collection id="typeDocumentsDc" class="com.company.referencebooks.entity.TypeDocument" view="_minimal">
+            <loader id="typeDocumentsDl">
+                <query>
+                    <![CDATA[select e from referencebooks_TyprDocument e]]>
+                </query>
+            </loader>
+        </collection>
+        <collection id="companiesDc" class="com.company.referencebooks.entity.Company" view="_minimal">
+            <loader id="companiesDl">
+                <query>
+                    <![CDATA[select e from referencebooks_Company e]]>
+                </query>
+            </loader>
+        </collection>
+        <collection id="executorsDc" class="com.company.referencebooks.entity.Employee" view="_minimal">
+            <loader id="executorsDl">
+                <query>
+                    <![CDATA[select e from referencebooks_Employee e]]>
+                </query>
+            </loader>
+        </collection>
+        <collection id="signersDc" class="com.company.referencebooks.entity.Employee" view="_minimal">
+            <loader id="signersDl">
+                <query>
+                    <![CDATA[select e from referencebooks_Employee e]]>
+                </query>
+            </loader>
+        </collection>
+        <collection id="nomenclatureCasesDc" class="com.company.referencebooks.entity.Nomenclature" view="_minimal">
+            <loader id="nomenclatureCasesDl">
+                <query>
+                    <![CDATA[select e from referencebooks_Nomenclature e]]>
+                </query>
+            </loader>
+        </collection>
+    </data>
+    <dialogMode height="600"
+                width="800"/>
+    <layout expand="outgoingDocumentTabSheet" spacing="true">
+        <tabSheet id="outgoingDocumentTabSheet">
+            <tab id="mainTab" caption="msg://mainTab.caption">
+                <scrollBox spacing="true">
+                    <form id="form" dataContainer="outgoingDocumentDc">
+                        <column width="350px">
+                            <lookupPickerField id="typeDocumentField" optionsContainer="typeDocumentsDc"
+                                               property="typeDocument"/>
+                            <textField id="registrationNumberField" property="registrationNumber" editable="false"/>
+                            <dateField id="registrationDateField" property="registrationDate" editable="false"/>
+                            <lookupPickerField id="companyField" optionsContainer="companiesDc" property="company"/>
+                            <textField id="recipientField" property="recipient"/>
+                            <textField id="topicField" property="topic"/>
+                            <lookupPickerField id="executorField" optionsContainer="executorsDc" property="executor" editable="false"/>
+                            <lookupPickerField id="signerField" optionsContainer="signersDc" property="signer"/>
+                            <textField id="notesField" property="notes"/>
+                            <textArea id="nameField" property="name" editable="false"/>
+                            <pickerField id="authorField" property="author" editable="false">
+                                <actions>
+                                    <action id="lookup" type="picker_lookup"/>
+                                    <action id="clear" type="picker_clear"/>
+                                </actions>
+                            </pickerField>
+                            <dateField id="creationDateField" property="creationDate" editable="false"/>
+                            <dateField id="changingDateField" property="changingDate" editable="false"/>
+                            <lookupField id="conditionField" dataContainer="outgoingDocumentDc" property="condition"/>
+                        </column>
+                    </form>
+                </scrollBox>
+            </tab>
+            <split orientation="horizontal" height="50px" width="200px"/>
+            <tab id="registrationTab" caption="msg://registrationTab.caption" margin="true,false,false,false" spacing="true">
+                <scrollBox spacing="true">
+                    <form dataContainer="outgoingDocumentDc">
+                        <column width="350px">
+                            <textField id="registrationNumberFieldDouble" property="registrationNumber" editable="false"/>
+                            <dateField id="registrationDateFieldDouble" property="registrationDate" editable="false"/>
+                            <pickerField id="logbookField" property="logbook">
+                                <actions>
+                                    <action id="lookup" type="picker_lookup"/>
+                                    <action id="clear" type="picker_clear"/>
+                                </actions>
+                            </pickerField>
+                            <textArea id="contentField" property="content"/>
+                            <lookupPickerField id="nomenclatureCaseField" optionsContainer="nomenclatureCasesDc"
+                                               property="nomenclatureCase"/>
+                            <dateField id="sentWorkDateField" property="sentWorkDate" editable="false"/>
+                        </column>
+                    </form >
+                </scrollBox>
+            </tab>
+        </tabSheet>
+        <hbox id="editActions" spacing="true">
+            <button action="windowCommitAndClose"/>
+            <button action="windowClose"/>
+        </hbox>
+    </layout>
+</window>

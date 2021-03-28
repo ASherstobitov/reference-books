@@ -1,0 +1,1 @@
+alter table REFERENCEBOOKS_OUTGOING_DOCUMENT drop column CREATION_DATE__U85330 cascade ;

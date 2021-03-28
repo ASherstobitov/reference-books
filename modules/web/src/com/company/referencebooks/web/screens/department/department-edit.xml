@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/screen/window.xsd"
+        caption="msg://departmentEdit.caption"
+        focusComponent="form"
+        messagesPack="com.company.referencebooks.web.screens.department">
+    <data>
+        <instance id="departmentDc"
+                  class="com.company.referencebooks.entity.Department">
+            <view extends="_local">
+                <property name="leadDepartment" view="_minimal"/>
+                <property name="manager" view="_minimal"/>
+            </view>
+            <loader/>
+        </instance>
+        <collection id="leadDepartmentsDc" class="com.company.referencebooks.entity.Department" view="_minimal">
+            <loader id="leadDepartmentsDl">
+                <query>
+                    <![CDATA[select e from referencebooks_Department e]]>
+                </query>
+            </loader>
+        </collection>
+        <collection id="managersDc" class="com.company.referencebooks.entity.Employee" view="_minimal">
+            <loader id="managersDl">
+                <query>
+                    <![CDATA[select e from referencebooks_Employee e]]>
+                </query>
+            </loader>
+        </collection>
+    </data>
+    <dialogMode height="600"
+                width="800"/>
+    <layout expand="editActions" spacing="true">
+        <form id="form" dataContainer="departmentDc">
+            <column width="350px">
+                <textField id="codeField" property="code"/>
+                <textField id="nameField" property="name"/>
+                <lookupPickerField id="leadDepartmentField" optionsContainer="leadDepartmentsDc"
+                                   property="leadDepartment"/>
+                <lookupPickerField id="managerField" optionsContainer="managersDc" property="manager"/>
+            </column>
+        </form>
+        <hbox id="editActions" spacing="true">
+            <button action="windowCommitAndClose"/>
+            <button action="windowClose"/>
+        </hbox>
+    </layout>
+</window>

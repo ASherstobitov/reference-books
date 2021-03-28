@@ -1,0 +1,1 @@
+drop table REFERENCEBOOKS_DEPARTMENT_DEPARTMENT_LINK__U03605 if exists cascade ;
