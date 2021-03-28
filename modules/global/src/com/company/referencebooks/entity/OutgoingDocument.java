@@ -4,6 +4,7 @@ import com.haulmont.chile.core.annotations.NamePattern;
 import com.haulmont.cuba.core.entity.StandardEntity;
 import com.haulmont.cuba.core.entity.annotation.Lookup;
 import com.haulmont.cuba.core.entity.annotation.LookupType;
+import com.haulmont.cuba.security.entity.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -18,6 +19,7 @@ public class OutgoingDocument extends StandardEntity {
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "TYPE_DOCUMENT_ID")
     @NotNull
+    @Lookup(type = LookupType.DROPDOWN, actions = "lookup")
     private TypeDocument typeDocument;
 
     @Column(name = "REGISTRATION_NUMBER")
@@ -30,6 +32,7 @@ public class OutgoingDocument extends StandardEntity {
     @NotNull
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "COMPANY_ID")
+    @Lookup(type = LookupType.DROPDOWN, actions = "lookup")
     private Company company;
 
     @Column(name = "RECIPIENT")
@@ -44,8 +47,9 @@ public class OutgoingDocument extends StandardEntity {
     @JoinColumn(name = "EXECUTOR_ID")
     private Employee executor;
 
-    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "SIGNER_ID")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @Lookup(type = LookupType.DROPDOWN, actions = "lookup")
     private Employee signer;
 
     @Column(name = "NOTES")
@@ -61,11 +65,12 @@ public class OutgoingDocument extends StandardEntity {
 
     @Column(name = "CREATION_DATE", nullable = false)
     @NotNull
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date creationDate;
 
     @Column(name = "CHANGING_DATE")
-    private String changingDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date changingDate;
 
     @Column(name = "CONDITION_")
     private String condition;
@@ -79,11 +84,20 @@ public class OutgoingDocument extends StandardEntity {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "NOMENCLATURE_CASE_ID")
+    @Lookup(type = LookupType.DROPDOWN, actions = "lookup")
     private Nomenclature nomenclatureCase;
 
     @Column(name = "SENT_WORK_DATE")
     @Temporal(TemporalType.DATE)
     private Date sentWorkDate;
+
+    public void setChangingDate(Date changingDate) {
+        this.changingDate = changingDate;
+    }
+
+    public Date getChangingDate() {
+        return changingDate;
+    }
 
     public void setSentWorkDate(Date sentWorkDate) {
         this.sentWorkDate = sentWorkDate;
@@ -175,10 +189,6 @@ public class OutgoingDocument extends StandardEntity {
 
     public void setLogbook(Logbook logbook) {
         this.logbook = logbook;
-    }
-
-    public String getChangingDate() {
-        return changingDate;
     }
 
     public String getName() {

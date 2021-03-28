@@ -2,8 +2,11 @@ package com.company.referencebooks.entity;
 
 import com.haulmont.chile.core.annotations.NamePattern;
 import com.haulmont.cuba.core.entity.StandardEntity;
+import com.haulmont.cuba.core.entity.annotation.Lookup;
+import com.haulmont.cuba.core.entity.annotation.LookupType;
 import com.haulmont.cuba.core.entity.annotation.OnDelete;
 import com.haulmont.cuba.core.global.DeletePolicy;
+import com.haulmont.cuba.security.entity.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -12,24 +15,25 @@ import javax.validation.constraints.Pattern;
 import java.util.List;
 
 @Table(name = "REFERENCEBOOKS_EMPLOYEE", indexes = {
-        @Index(name = "IDX_REFERENCEBOOKS_EMPLOYEE", columnList = "LAST_NAME, PERSONNEL_NUMBER, DEPARTMENT_ID")
+        @Index(name = "IDX_REFERENCEBOOKS_EMPLOYEE", columnList = "LAST_NAME, PERSONNEL_NUMBER")
 })
 @Entity(name = "referencebooks_Employee")
-@NamePattern("%s %s|lastName,personnelNumber")
+@NamePattern("%s %s %s|lastName,firstName,middleName")
 public class Employee extends StandardEntity {
     private static final long serialVersionUID = -684329574851752601L;
 
     @NotNull
     @Column(name = "PERSONNEL_NUMBER", nullable = false, unique = true)
+    @Pattern(regexp = "\\d+", message = "Invalid format")
     private String personnelNumber;
 
     @OneToMany(mappedBy = "executor")
     private List<OutgoingDocument> outGoingDocuments;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "USER_ID")
     @OnDelete(DeletePolicy.CASCADE)
-    private com.company.referencebooks.entity.User user;
+    private User user;
 
     @NotNull
     @Pattern(message = "Invalid format", regexp = "[A-Z\u0410-\u042F][a-z\u0430-\u044F]*")
@@ -45,9 +49,10 @@ public class Employee extends StandardEntity {
     @Pattern(message = "Invalid format", regexp = "[A-Z\u0410-\u042F][a-z\u0430-\u044F]*")
     private String middleName;
 
-    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "DEPARTMENT_ID")
     @OnDelete(DeletePolicy.CASCADE)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @Lookup(type = LookupType.DROPDOWN, actions = "lookup")
     private Department department;
 
     @Column(name = "EMAIL", unique = true)

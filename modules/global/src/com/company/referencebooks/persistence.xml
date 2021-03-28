@@ -3,7 +3,6 @@
     <persistence-unit name="referencebooks" transaction-type="RESOURCE_LOCAL">
 
         <class>com.company.referencebooks.entity.Employee</class>
-        <class>com.company.referencebooks.entity.User</class>
         <class>com.company.referencebooks.entity.Department</class>
         <class>com.company.referencebooks.entity.TypeDocument</class>
         <class>com.company.referencebooks.entity.Company</class>

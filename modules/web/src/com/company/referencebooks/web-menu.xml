@@ -4,14 +4,13 @@
         <item screen="referencebooks_Employee.browse" caption="mainMsg://menu_config.referencebooks_Employee.browse"/>
         <item screen="referencebooks_Department.browse"
               caption="mainMsg://menu_config.referencebooks_Department.browse"/>
-        <item screen="referencebooks_User.browse" caption="mainMsg://menu_config.referencebooks_User.browse"/>
         <item screen="referencebooks_Logbook.browse" caption="mainMsg://menu_config.referencebooks_Logbook.browse"/>
-        <item screen="referencebooks_OutgoingDocument.browse"
-              caption="mainMsg://menu_config.referencebooks_OutgoingDocument.browse"/>
         <item screen="referencebooks_TyprDocument.browse"
               caption="mainMsg://menu_config.referencebooks_TyprDocument.browse"/>
         <item screen="referencebooks_Company.browse" caption="mainMsg://menu_config.referencebooks_Company.browse"/>
         <item screen="referencebooks_Nomenclature.browse"
               caption="mainMsg://menu_config.referencebooks_Nomenclature.browse"/>
+        <item screen="referencebooks_OutgoingDocument.browse"
+              caption="mainMsg://menu_config.referencebooks_OutgoingDocument.browse"/>
     </menu>
 </menu-config>

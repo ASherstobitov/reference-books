@@ -57,24 +57,7 @@ create table REFERENCEBOOKS_TYPR_DOCUMENT (
     primary key (ID)
 )^
 -- end REFERENCEBOOKS_TYPR_DOCUMENT
--- begin REFERENCEBOOKS_USER
-create table REFERENCEBOOKS_USER (
-    ID varchar(36) not null,
-    VERSION integer not null,
-    CREATE_TS timestamp,
-    CREATED_BY varchar(50),
-    UPDATE_TS timestamp,
-    UPDATED_BY varchar(50),
-    DELETE_TS timestamp,
-    DELETED_BY varchar(50),
-    --
-    LAST_NAME varchar(255),
-    FIRST_NAME varchar(255),
-    MIDDLE_NAME varchar(255),
-    --
-    primary key (ID)
-)^
--- end REFERENCEBOOKS_USER
+
 -- begin REFERENCEBOOKS_COMPANY
 create table REFERENCEBOOKS_COMPANY (
     ID varchar(36) not null,
@@ -117,8 +100,8 @@ create table REFERENCEBOOKS_OUTGOING_DOCUMENT (
     NOTES varchar(255),
     NAME varchar(255) not null,
     AUTHOR_ID varchar(36),
-    CREATION_DATE date not null,
-    CHANGING_DATE varchar(255),
+    CREATION_DATE timestamp not null,
+    CHANGING_DATE timestamp,
     CONDITION_ varchar(255),
     LOGBOOK_ID varchar(36),
     CONTENT varchar(255),
@@ -142,7 +125,7 @@ create table REFERENCEBOOKS_LOGBOOK (
     CODE varchar(255),
     NAME varchar(255),
     FORMAT varchar(255) not null,
-    COUNT_ varchar(255),
+    AMOUNT_ bigint,
     --
     primary key (ID)
 )^

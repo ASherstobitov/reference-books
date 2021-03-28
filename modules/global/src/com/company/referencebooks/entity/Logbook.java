@@ -26,18 +26,18 @@ public class Logbook extends StandardEntity {
     private String name;
 
     @NotNull
-    @Column(name = "FORMAT", nullable = false, unique = true)
+    @Column(name = "FORMAT", nullable = false)
     private String format;
 
-    @Column(name = "COUNT_")
-    private String amount;
+    @Column(name = "AMOUNT_")
+    private Long amount;
 
-    public String getAmount() {
-        return amount;
+    public void setAmount(Long amount) {
+        this.amount = amount;
     }
 
-    public void setAmount(String amount) {
-        this.amount = amount;
+    public Long getAmount() {
+        return amount;
     }
 
     public String getFormat() {

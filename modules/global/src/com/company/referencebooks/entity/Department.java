@@ -2,6 +2,8 @@ package com.company.referencebooks.entity;
 
 import com.haulmont.chile.core.annotations.NamePattern;
 import com.haulmont.cuba.core.entity.StandardEntity;
+import com.haulmont.cuba.core.entity.annotation.Lookup;
+import com.haulmont.cuba.core.entity.annotation.LookupType;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -14,15 +16,16 @@ public class Department extends StandardEntity {
     private static final long serialVersionUID = -6629845134260151789L;
 
     @NotNull
-    @Column(name = "CODE", nullable = false, unique = true)
+    @Column(name = "CODE", nullable = false)
     private String code;
 
     @NotNull
     @Column(name = "NAME", nullable = false)
     private String name;
 
-    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "LEAD_DEPARTMENT_ID")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @Lookup(type = LookupType.DROPDOWN, actions = "lookup")
     private Department leadDepartment;
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -37,14 +40,12 @@ public class Department extends StandardEntity {
         this.manager = manager;
     }
 
-    public Department getLeadDepartment() {
-        return leadDepartment;
+    public void setLeadDepartment(Department leadDepartment) {
+        this.leadDepartment = leadDepartment;
     }
 
-    public void setLeadDepartment(Department leadDepartment) {
-        if (!this.equals(leadDepartment)) {
-            this.leadDepartment = leadDepartment;
-        }
+    public Department getLeadDepartment() {
+        return leadDepartment;
     }
 
     public String getName() {
