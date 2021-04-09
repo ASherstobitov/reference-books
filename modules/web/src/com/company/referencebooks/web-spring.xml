@@ -11,9 +11,10 @@
         <property name="serverSelector" ref="cuba_ServerSelector"/>
         <property name="remoteServices">
             <map>
-                <entry key="referencebooks_LogbookService" value="com.company.referencebooks.service.LogbookService"/>
                 <entry key="referencebooks_OutgoingDocumentService"
                        value="com.company.referencebooks.service.OutgoingDocumentService"/>
+                <entry key="referencebooks_SequenceNumberService"
+                       value="com.company.referencebooks.service.SequenceNumberService"/>
             </map>
         </property>
     </bean>

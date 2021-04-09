@@ -15,7 +15,7 @@
     <layout expand="editActions" spacing="true">
         <form id="form" dataContainer="companyDc">
             <column width="350px">
-                <textField id="codeField" property="code"/>
+                <textField id="codeField" property="code" editable="false"/>
                 <textField id="shortNameField" property="shortName"/>
                 <textField id="fullNameField" property="fullName"/>
                 <textField id="legalAddressField" property="legalAddress"/>
@@ -24,7 +24,7 @@
         </form>
         <hbox id="editActions" spacing="true">
             <button action="windowCommitAndClose"/>
-            <button action="windowClose"/>
+            <button id="close" action="windowClose"/>
         </hbox>
     </layout>
 </window>

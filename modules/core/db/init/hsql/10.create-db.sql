@@ -17,6 +17,7 @@ create table REFERENCEBOOKS_EMPLOYEE (
     DEPARTMENT_ID varchar(36),
     EMAIL varchar(255),
     PHONE_NUMBER varchar(255),
+    IMAGE_FILE_ID varchar(36),
     --
     primary key (ID)
 )^
@@ -89,7 +90,7 @@ create table REFERENCEBOOKS_OUTGOING_DOCUMENT (
     DELETE_TS timestamp,
     DELETED_BY varchar(50),
     --
-    TYPE_DOCUMENT_ID varchar(36) not null,
+    TYPE_DOCUMENT_ID varchar(36),
     REGISTRATION_NUMBER varchar(255),
     REGISTRATION_DATE date,
     COMPANY_ID varchar(36) not null,
@@ -147,3 +148,10 @@ create table REFERENCEBOOKS_NOMENCLATURE (
     primary key (ID)
 )^
 -- end REFERENCEBOOKS_NOMENCLATURE
+-- begin REFERENCEBOOKS_OUTGOING_DOCUMENT_FILE_DESCRIPTOR_LINK
+create table REFERENCEBOOKS_OUTGOING_DOCUMENT_FILE_DESCRIPTOR_LINK (
+    OUTGOING_DOCUMENT_ID varchar(36) not null,
+    FILE_DESCRIPTOR_ID varchar(36) not null,
+    primary key (OUTGOING_DOCUMENT_ID, FILE_DESCRIPTOR_ID)
+)^
+-- end REFERENCEBOOKS_OUTGOING_DOCUMENT_FILE_DESCRIPTOR_LINK

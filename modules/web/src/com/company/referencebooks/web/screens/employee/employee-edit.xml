@@ -13,6 +13,7 @@
                     <property name="middleName"/>
                 </property>
                 <property name="department" view="_minimal"/>
+                <property name="imageFile" view="_minimal"/>
             </view>
             <loader/>
         </instance>
@@ -42,6 +43,11 @@
                 <lookupPickerField id="departmentField" optionsContainer="departmentsDc" property="department"/>
                 <textField id="emailField" property="email"/>
                 <textField id="phoneNumberField" property="phoneNumber"/>
+
+                <upload id="uploadField" dataContainer="employeeDc" fileStoragePutMode="IMMEDIATE"
+                       caption="msg://uploadImage" showClearButton="true" property="imageFile" showFileName="true"/>
+                <image id="image" scaleMode="CONTAIN" height="150px" width="150px"
+                       caption="msg://image" dataContainer="employeeDc" property="imageFile"/>
             </column>
         </form>
         <hbox id="editActions" spacing="true">

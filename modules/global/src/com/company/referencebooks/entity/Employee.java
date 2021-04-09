@@ -1,6 +1,7 @@
 package com.company.referencebooks.entity;
 
 import com.haulmont.chile.core.annotations.NamePattern;
+import com.haulmont.cuba.core.entity.FileDescriptor;
 import com.haulmont.cuba.core.entity.StandardEntity;
 import com.haulmont.cuba.core.entity.annotation.Lookup;
 import com.haulmont.cuba.core.entity.annotation.LookupType;
@@ -62,6 +63,18 @@ public class Employee extends StandardEntity {
     @Column(name = "PHONE_NUMBER", unique = true)
     @Pattern(regexp = "^\\d{10}$", message = "Invalid format")
     private String phoneNumber;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "IMAGE_FILE_ID")
+    private FileDescriptor imageFile;
+
+    public FileDescriptor getImageFile() {
+        return imageFile;
+    }
+
+    public void setImageFile(FileDescriptor imageFile) {
+        this.imageFile = imageFile;
+    }
 
     public void setUser(User user) {
         this.user = user;

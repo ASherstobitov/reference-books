@@ -7,7 +7,15 @@
     <data readOnly="true">
         <collection id="employeesDc"
                     class="com.company.referencebooks.entity.Employee">
-            <view extends="_local"/>
+            <view extends="_local">
+                <property name="user" view="_minimal">
+                    <property name="firstName"/>
+                    <property name="lastName"/>
+                    <property name="middleName"/>
+                </property>
+                <property name="department" view="_minimal"/>
+                <property name="imageFile" view="_minimal"/>
+            </view>
             <loader id="employeesDl">
                 <query>
                     <![CDATA[select e from referencebooks_Employee e]]>
@@ -34,11 +42,14 @@
             </actions>
             <columns>
                 <column id="personnelNumber"/>
+                <column id="user"/>
                 <column id="lastName"/>
                 <column id="firstName"/>
                 <column id="middleName"/>
+                <column id="department"/>
                 <column id="email"/>
                 <column id="phoneNumber"/>
+                <column id="imageFile"/>
             </columns>
             <rowsCount/>
             <buttonsPanel id="buttonsPanel"

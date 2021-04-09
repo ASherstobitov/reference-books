@@ -1,14 +1,18 @@
 package com.company.referencebooks.entity;
 
 import com.haulmont.chile.core.annotations.NamePattern;
+import com.haulmont.cuba.core.entity.FileDescriptor;
 import com.haulmont.cuba.core.entity.StandardEntity;
 import com.haulmont.cuba.core.entity.annotation.Lookup;
 import com.haulmont.cuba.core.entity.annotation.LookupType;
+import com.haulmont.cuba.core.entity.annotation.OnDelete;
+import com.haulmont.cuba.core.global.DeletePolicy;
 import com.haulmont.cuba.security.entity.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 @Table(name = "REFERENCEBOOKS_OUTGOING_DOCUMENT")
 @Entity(name = "referencebooks_OutgoingDocument")
@@ -16,11 +20,17 @@ import java.util.Date;
 public class OutgoingDocument extends StandardEntity {
     private static final long serialVersionUID = -4174784876363275126L;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "TYPE_DOCUMENT_ID")
-    @NotNull
+    @OneToOne(fetch = FetchType.LAZY)
     @Lookup(type = LookupType.DROPDOWN, actions = "lookup")
     private TypeDocument typeDocument;
+
+    @OnDelete(DeletePolicy.CASCADE)
+    @ManyToMany
+    @JoinTable(name = "REFERENCEBOOKS_OUTGOING_DOCUMENT_FILE_DESCRIPTOR_LINK",
+            joinColumns = @JoinColumn(name = "OUTGOING_DOCUMENT_ID"),
+            inverseJoinColumns = @JoinColumn(name = "FILE_DESCRIPTOR_ID"))
+    private List<FileDescriptor> documents;
 
     @Column(name = "REGISTRATION_NUMBER")
     private String registrationNumber;
@@ -90,6 +100,22 @@ public class OutgoingDocument extends StandardEntity {
     @Column(name = "SENT_WORK_DATE")
     @Temporal(TemporalType.DATE)
     private Date sentWorkDate;
+
+    public void setDocuments(List<FileDescriptor> documents) {
+        this.documents = documents;
+    }
+
+    public List<FileDescriptor> getDocuments() {
+        return documents;
+    }
+
+    public void setTypeDocument(TypeDocument typeDocument) {
+        this.typeDocument = typeDocument;
+    }
+
+    public TypeDocument getTypeDocument() {
+        return typeDocument;
+    }
 
     public void setChangingDate(Date changingDate) {
         this.changingDate = changingDate;
@@ -227,11 +253,4 @@ public class OutgoingDocument extends StandardEntity {
         return registrationNumber;
     }
 
-    public TypeDocument getTypeDocument() {
-        return typeDocument;
-    }
-
-    public void setTypeDocument(TypeDocument typeDocument) {
-        this.typeDocument = typeDocument;
-    }
 }

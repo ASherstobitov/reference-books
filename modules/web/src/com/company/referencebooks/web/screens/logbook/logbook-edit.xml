@@ -23,7 +23,7 @@
         </form>
         <hbox id="editActions" spacing="true">
             <button action="windowCommitAndClose"/>
-            <button action="windowClose"/>
+            <button id="close" action="windowClose"/>
         </hbox>
     </layout>
 </window>

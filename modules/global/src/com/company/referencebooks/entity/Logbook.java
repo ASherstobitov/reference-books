@@ -9,13 +9,14 @@ import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 @PublishEntityChangedEvents
 @Table(name = "REFERENCEBOOKS_LOGBOOK", indexes = {
         @Index(name = "IDX_REFERENCEBOOKS_LOGBOOK", columnList = "CODE")
 })
 @Entity(name = "referencebooks_Logbook")
-@NamePattern("%s|code")
+@NamePattern("%s|name")
 public class Logbook extends StandardEntity {
     private static final long serialVersionUID = -7961839454860071249L;
 
@@ -26,6 +27,7 @@ public class Logbook extends StandardEntity {
     private String name;
 
     @NotNull
+    @Pattern(message = "Invalid format", regexp = "^[\u0410-\u042F][\u0430-\u044F]{2} - ((MM\\.|DD\\.MM\\.)(YYYY|YY)|(YYYY|YY)) - \u2116$")
     @Column(name = "FORMAT", nullable = false)
     private String format;
 

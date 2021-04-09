@@ -1,6 +1,9 @@
 package com.company.referencebooks.web.screens.logbook;
 
-import com.company.referencebooks.service.LogbookService;
+import com.company.referencebooks.entity.Nomenclature;
+import com.company.referencebooks.service.SequenceNumberService;
+import com.haulmont.cuba.core.app.UniqueNumbersService;
+import com.haulmont.cuba.gui.components.Button;
 import com.haulmont.cuba.gui.screen.*;
 import com.company.referencebooks.entity.Logbook;
 
@@ -13,10 +16,18 @@ import javax.inject.Inject;
 public class LogbookEdit extends StandardEditor<Logbook> {
 
     @Inject
-    private LogbookService logbookService;
+    private SequenceNumberService sequenceNumberService;
+
+    private Long currentNumber;
 
     @Subscribe
     public void onInitEntity(InitEntityEvent<Logbook> event) {
-        event.getEntity().setCode("Ж00000" + logbookService.getNextValue());
+        currentNumber = sequenceNumberService.getNextNumber("logbook");
+        event.getEntity().setCode("Ж00000" + currentNumber);
+    }
+
+    @Subscribe("close")
+    public void onCloseClick(Button.ClickEvent event) {
+        sequenceNumberService.setCurrentNumber("logbook", currentNumber);
     }
 }
