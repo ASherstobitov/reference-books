@@ -24,7 +24,7 @@ public class Department extends StandardEntity {
     private String name;
 
     @JoinColumn(name = "LEAD_DEPARTMENT_ID")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @Lookup(type = LookupType.DROPDOWN, actions = "lookup")
     private Department leadDepartment;
 
@@ -67,7 +67,7 @@ public class Department extends StandardEntity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Department)) return false;
         if (!super.equals(o)) return false;
         Department that = (Department) o;
         return Objects.equals(code, that.code) &&

@@ -26,6 +26,7 @@ public class CompanyEdit extends StandardEditor<Company> {
 
     @Subscribe("close")
     public void onCloseClick(Button.ClickEvent event) {
+        if (currentNumber != null)
         sequenceNumberService.setCurrentNumber("company", currentNumber);
     }
 }

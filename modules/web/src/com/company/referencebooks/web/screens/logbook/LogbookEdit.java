@@ -28,6 +28,7 @@ public class LogbookEdit extends StandardEditor<Logbook> {
 
     @Subscribe("close")
     public void onCloseClick(Button.ClickEvent event) {
+        if (currentNumber != null)
         sequenceNumberService.setCurrentNumber("logbook", currentNumber);
     }
 }

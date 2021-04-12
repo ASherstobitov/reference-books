@@ -49,7 +49,6 @@
                 <column id="department"/>
                 <column id="email"/>
                 <column id="phoneNumber"/>
-                <column id="imageFile"/>
             </columns>
             <rowsCount/>
             <buttonsPanel id="buttonsPanel"

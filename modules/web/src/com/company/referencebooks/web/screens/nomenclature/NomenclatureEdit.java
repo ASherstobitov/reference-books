@@ -26,6 +26,7 @@ public class NomenclatureEdit extends StandardEditor<Nomenclature> {
 
     @Subscribe("close")
     public void onCloseClick(Button.ClickEvent event) {
+        if (currentNumber != null)
         sequenceNumberService.setCurrentNumber("nomenclature", currentNumber);
     }
 }

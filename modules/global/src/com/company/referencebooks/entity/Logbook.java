@@ -27,7 +27,7 @@ public class Logbook extends StandardEntity {
     private String name;
 
     @NotNull
-    @Pattern(message = "Invalid format", regexp = "^[\u0410-\u042F][\u0430-\u044F]{2} - ((MM\\.|DD\\.MM\\.)(YYYY|YY)|(YYYY|YY)) - \u2116$")
+    @Pattern(message = "Неверный формат", regexp = "^[\u0410-\u042F][\u0430-\u044F]{2} - ((MM\\.|DD\\.MM\\.)(YYYY|YY)|(YYYY|YY)) - \u2116$")
     @Column(name = "FORMAT", nullable = false)
     private String format;
 

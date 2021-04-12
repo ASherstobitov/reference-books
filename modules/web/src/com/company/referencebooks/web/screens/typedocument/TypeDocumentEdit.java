@@ -28,6 +28,7 @@ public class TypeDocumentEdit extends StandardEditor<TypeDocument> {
 
     @Subscribe("close")
     public void onCloseClick(Button.ClickEvent event) {
+        if (currentNumber != null)
         sequenceNumberService.setCurrentNumber("typeDocument", currentNumber);
     }
 }
