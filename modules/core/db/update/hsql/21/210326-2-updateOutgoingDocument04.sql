@@ -1,2 +1,0 @@
-alter table REFERENCEBOOKS_OUTGOING_DOCUMENT alter column CONTEXT rename to CONTEXT__U62859 ^
-alter table REFERENCEBOOKS_OUTGOING_DOCUMENT add column CONTENT varchar(255) ;

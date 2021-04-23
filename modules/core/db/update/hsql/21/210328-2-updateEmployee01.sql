@@ -1,1 +1,0 @@
-alter table REFERENCEBOOKS_EMPLOYEE add constraint FK_REFERENCEBOOKS_EMPLOYEE_ON_USER foreign key (USER_ID) references SEC_USER(ID);

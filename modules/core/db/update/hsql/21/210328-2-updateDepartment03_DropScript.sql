@@ -1,1 +1,0 @@
-alter table REFERENCEBOOKS_DEPARTMENT drop column CHILRD_DEPARTMENT_ID__U05135 cascade ;

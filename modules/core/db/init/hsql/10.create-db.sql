@@ -1,3 +1,22 @@
+-- begin REFERENCEBOOKS_DEPARTMENT
+create table REFERENCEBOOKS_DEPARTMENT (
+    ID varchar(36) not null,
+    VERSION integer not null,
+    CREATE_TS timestamp,
+    CREATED_BY varchar(50),
+    UPDATE_TS timestamp,
+    UPDATED_BY varchar(50),
+    DELETE_TS timestamp,
+    DELETED_BY varchar(50),
+    --
+    CODE varchar(255) not null,
+    NAME varchar(255) not null,
+    MANAGER_ID varchar(36),
+    LEAD_DEPARTMENT_ID varchar(36),
+    --
+    primary key (ID)
+)^
+-- end REFERENCEBOOKS_DEPARTMENT
 -- begin REFERENCEBOOKS_EMPLOYEE
 create table REFERENCEBOOKS_EMPLOYEE (
     ID varchar(36) not null,
@@ -22,43 +41,6 @@ create table REFERENCEBOOKS_EMPLOYEE (
     primary key (ID)
 )^
 -- end REFERENCEBOOKS_EMPLOYEE
--- begin REFERENCEBOOKS_DEPARTMENT
-create table REFERENCEBOOKS_DEPARTMENT (
-    ID varchar(36) not null,
-    VERSION integer not null,
-    CREATE_TS timestamp,
-    CREATED_BY varchar(50),
-    UPDATE_TS timestamp,
-    UPDATED_BY varchar(50),
-    DELETE_TS timestamp,
-    DELETED_BY varchar(50),
-    --
-    CODE varchar(255) not null,
-    NAME varchar(255) not null,
-    LEAD_DEPARTMENT_ID varchar(36),
-    MANAGER_ID varchar(36),
-    --
-    primary key (ID)
-)^
--- end REFERENCEBOOKS_DEPARTMENT
--- begin REFERENCEBOOKS_TYPR_DOCUMENT
-create table REFERENCEBOOKS_TYPR_DOCUMENT (
-    ID varchar(36) not null,
-    VERSION integer not null,
-    CREATE_TS timestamp,
-    CREATED_BY varchar(50),
-    UPDATE_TS timestamp,
-    UPDATED_BY varchar(50),
-    DELETE_TS timestamp,
-    DELETED_BY varchar(50),
-    --
-    CODE varchar(255) not null,
-    NAME varchar(255) not null,
-    --
-    primary key (ID)
-)^
--- end REFERENCEBOOKS_TYPR_DOCUMENT
-
 -- begin REFERENCEBOOKS_COMPANY
 create table REFERENCEBOOKS_COMPANY (
     ID varchar(36) not null,
@@ -97,13 +79,14 @@ create table REFERENCEBOOKS_OUTGOING_DOCUMENT (
     RECIPIENT varchar(255),
     TOPIC varchar(255) not null,
     EXECUTOR_ID varchar(36) not null,
-    SIGNER_ID varchar(36),
+    SIGNER_ID varchar(36) not null,
+    COORDINATOR_ID varchar(36) not null,
     NOTES varchar(255),
     NAME varchar(255) not null,
     AUTHOR_ID varchar(36),
     CREATION_DATE timestamp not null,
     CHANGING_DATE timestamp,
-    CONDITION_ varchar(255),
+    STATE varchar(50),
     LOGBOOK_ID varchar(36),
     CONTENT varchar(255),
     NOMENCLATURE_CASE_ID varchar(36),
@@ -131,6 +114,23 @@ create table REFERENCEBOOKS_LOGBOOK (
     primary key (ID)
 )^
 -- end REFERENCEBOOKS_LOGBOOK
+-- begin REFERENCEBOOKS_TYPR_DOCUMENT
+create table REFERENCEBOOKS_TYPR_DOCUMENT (
+    ID varchar(36) not null,
+    VERSION integer not null,
+    CREATE_TS timestamp,
+    CREATED_BY varchar(50),
+    UPDATE_TS timestamp,
+    UPDATED_BY varchar(50),
+    DELETE_TS timestamp,
+    DELETED_BY varchar(50),
+    --
+    CODE varchar(255) not null,
+    NAME varchar(255) not null,
+    --
+    primary key (ID)
+)^
+-- end REFERENCEBOOKS_TYPR_DOCUMENT
 -- begin REFERENCEBOOKS_NOMENCLATURE
 create table REFERENCEBOOKS_NOMENCLATURE (
     ID varchar(36) not null,

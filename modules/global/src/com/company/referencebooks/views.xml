@@ -1,4 +1,39 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <views xmlns="http://schemas.haulmont.com/cuba/view.xsd">
 
+    <view entity="referencebooks_Department" name="department-editView" extends="_local">
+        <property name="manager" view="_minimal"/>
+        <property name="leadDepartment" view="_minimal"/>
+        <property name="sonDeparts" view="_minimal"/>
+    </view>
+    <view entity="referencebooks_OutgoingDocument" name="outgoingDocument-editView" extends="_base">
+        <property name="documents" view="_minimal"/>
+        <property name="company" view="_minimal"/>
+        <property name="executor" view="_minimal">
+            <property name="user" view="_minimal"/>
+            <property name="department" view="_minimal">
+                <property name="manager" view="_minimal">
+                    <property name="user" view="_minimal"/>
+                </property>
+            </property>
+        </property>
+        <property name="signer" view="_minimal">
+            <property name="user" view="_minimal"/>
+        </property>
+        <property name="coordinator" view="_minimal">
+            <property name="user" view="_minimal"/>
+        </property>
+        <property name="author" view="_minimal">
+            <property name="firstName"/>
+            <property name="lastName"/>
+            <property name="middleName"/>
+        </property>
+        <property name="logbook" view="_minimal">
+            <property name="format"/>
+        </property>
+        <property name="nomenclatureCase" view="_minimal"/>
+    </view>
+    <view entity="referencebooks_Employee" name="employee-view" extends="_base">
+        <property name="user" view="_minimal"/>
+    </view>
 </views>

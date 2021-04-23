@@ -31,9 +31,8 @@ public class Employee extends StandardEntity {
     @OneToMany(mappedBy = "executor")
     private List<OutgoingDocument> outGoingDocuments;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "USER_ID")
-    @OnDelete(DeletePolicy.CASCADE)
     private User user;
 
     @NotNull
@@ -52,7 +51,7 @@ public class Employee extends StandardEntity {
 
     @JoinColumn(name = "DEPARTMENT_ID")
     @OnDelete(DeletePolicy.CASCADE)
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @Lookup(type = LookupType.DROPDOWN, actions = "lookup")
     private Department department;
 

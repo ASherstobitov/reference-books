@@ -7,26 +7,7 @@
     <data readOnly="true">
         <collection id="outgoingDocumentsDc"
                     class="com.company.referencebooks.entity.OutgoingDocument">
-            <view extends="_local">
-                <property name="typeDocument" view="_minimal"/>
-                <property name="documents" view="_minimal">
-                    <property name="size"/>
-                </property>
-                <property name="company" view="_minimal"/>
-                <property name="executor" view="_minimal"/>
-                <property name="signer" view="_minimal"/>
-                <property name="author" view="_minimal">
-                    <property name="firstName"/>
-                    <property name="lastName"/>
-                    <property name="middleName"/>
-                </property>
-                <property name="logbook" view="_minimal">
-                    <property name="code"/>
-                    <property name="format"/>
-                    <property name="amount"/>
-                </property>
-                <property name="nomenclatureCase" view="_minimal"/>
-            </view>
+            <view extends="_local"/>
             <loader id="outgoingDocumentsDl">
                 <query>
                     <![CDATA[select e from referencebooks_OutgoingDocument e]]>
@@ -50,25 +31,19 @@
                 <action id="create" type="create"/>
                 <action id="edit" type="edit"/>
                 <action id="remove" type="remove"/>
+                <action id="run" type="runReport"/>
             </actions>
             <columns>
-                <column id="typeDocument"/>
                 <column id="registrationNumber"/>
                 <column id="registrationDate"/>
-                <column id="company"/>
                 <column id="recipient"/>
                 <column id="topic"/>
-                <column id="executor"/>
-                <column id="signer"/>
                 <column id="notes"/>
                 <column id="name"/>
-                <column id="author"/>
                 <column id="creationDate"/>
                 <column id="changingDate"/>
-                <column id="condition"/>
-                <column id="logbook"/>
+                <column id="state"/>
                 <column id="content"/>
-                <column id="nomenclatureCase"/>
                 <column id="sentWorkDate"/>
             </columns>
             <rowsCount/>
@@ -77,6 +52,7 @@
                 <button id="createBtn" action="outgoingDocumentsTable.create"/>
                 <button id="editBtn" action="outgoingDocumentsTable.edit"/>
                 <button id="removeBtn" action="outgoingDocumentsTable.remove"/>
+                <button id="runReports" action="outgoingDocumentsTable.run"/>
             </buttonsPanel>
         </groupTable>
         <hbox id="lookupActions" spacing="true" visible="false">

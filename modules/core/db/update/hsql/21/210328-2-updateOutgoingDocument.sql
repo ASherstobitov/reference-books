@@ -1,2 +1,0 @@
-alter table REFERENCEBOOKS_OUTGOING_DOCUMENT alter column AUTHOR_ID rename to AUTHOR_ID__U25947 ^
-alter table REFERENCEBOOKS_OUTGOING_DOCUMENT add column AUTHOR_ID varchar(36) ;

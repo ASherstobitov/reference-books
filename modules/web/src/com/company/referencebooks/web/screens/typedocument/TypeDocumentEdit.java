@@ -23,7 +23,7 @@ public class TypeDocumentEdit extends StandardEditor<TypeDocument> {
     @Subscribe
     public void onInitEntity(InitEntityEvent<TypeDocument> event) {
         currentNumber = sequenceNumberService.getNextNumber("typeDocument");
-        event.getEntity().setCode("ВД00000" + currentNumber);
+        event.getEntity().setCode(String.format("ВД00000%s", currentNumber));
     }
 
     @Subscribe("close")

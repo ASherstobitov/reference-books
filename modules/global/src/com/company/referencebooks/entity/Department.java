@@ -7,7 +7,7 @@ import com.haulmont.cuba.core.entity.annotation.LookupType;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Objects;
+import java.util.List;
 
 @Table(name = "REFERENCEBOOKS_DEPARTMENT")
 @Entity(name = "referencebooks_Department")
@@ -23,14 +23,34 @@ public class Department extends StandardEntity {
     @Column(name = "NAME", nullable = false)
     private String name;
 
+    @OneToOne
+    @JoinColumn(name = "MANAGER_ID")
+    @Lookup(type = LookupType.DROPDOWN, actions = {})
+    private Employee manager;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "LEAD_DEPARTMENT_ID")
-    @ManyToOne(fetch = FetchType.EAGER)
-    @Lookup(type = LookupType.DROPDOWN, actions = "lookup")
+    @Lookup(type = LookupType.DROPDOWN, actions = {})
     private Department leadDepartment;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MANAGER_ID")
-    private Employee manager;
+    @OneToMany(mappedBy = "leadDepartment")
+    private List<Department> sonDeparts;
+
+    public List<Department> getSonDeparts() {
+        return sonDeparts;
+    }
+
+    public void setSonDeparts(List<Department> sonDeparts) {
+        this.sonDeparts = sonDeparts;
+    }
+
+    public Department getLeadDepartment() {
+        return leadDepartment;
+    }
+
+    public void setLeadDepartment(Department leadDepartment) {
+        this.leadDepartment = leadDepartment;
+    }
 
     public Employee getManager() {
         return manager;
@@ -38,14 +58,6 @@ public class Department extends StandardEntity {
 
     public void setManager(Employee manager) {
         this.manager = manager;
-    }
-
-    public void setLeadDepartment(Department leadDepartment) {
-        this.leadDepartment = leadDepartment;
-    }
-
-    public Department getLeadDepartment() {
-        return leadDepartment;
     }
 
     public String getName() {
@@ -64,19 +76,4 @@ public class Department extends StandardEntity {
         this.code = code;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Department)) return false;
-        if (!super.equals(o)) return false;
-        Department that = (Department) o;
-        return Objects.equals(code, that.code) &&
-                Objects.equals(name, that.name) &&
-                Objects.equals(manager, that.manager);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), code, name, manager);
-    }
 }

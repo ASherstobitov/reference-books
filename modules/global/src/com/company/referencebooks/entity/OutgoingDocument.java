@@ -6,6 +6,7 @@ import com.haulmont.cuba.core.entity.StandardEntity;
 import com.haulmont.cuba.core.entity.annotation.Lookup;
 import com.haulmont.cuba.core.entity.annotation.LookupType;
 import com.haulmont.cuba.core.entity.annotation.OnDelete;
+import com.haulmont.cuba.core.entity.annotation.PublishEntityChangedEvents;
 import com.haulmont.cuba.core.global.DeletePolicy;
 import com.haulmont.cuba.security.entity.User;
 
@@ -14,6 +15,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
+@PublishEntityChangedEvents
 @Table(name = "REFERENCEBOOKS_OUTGOING_DOCUMENT")
 @Entity(name = "referencebooks_OutgoingDocument")
 @NamePattern("%s %s|typeDocument,name")
@@ -57,10 +59,18 @@ public class OutgoingDocument extends StandardEntity {
     @JoinColumn(name = "EXECUTOR_ID")
     private Employee executor;
 
-    @JoinColumn(name = "SIGNER_ID")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @NotNull
     @Lookup(type = LookupType.DROPDOWN, actions = "lookup")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+
+    @JoinColumn(name = "SIGNER_ID")
     private Employee signer;
+
+    @NotNull
+    @Lookup(type = LookupType.DROPDOWN, actions = "lookup")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "COORDINATOR_ID")
+    private Employee coordinator;
 
     @Column(name = "NOTES")
     private String notes;
@@ -82,11 +92,11 @@ public class OutgoingDocument extends StandardEntity {
     @Temporal(TemporalType.TIMESTAMP)
     private Date changingDate;
 
-    @Column(name = "CONDITION_")
-    private String condition;
+    @Column(name = "STATE")
+    private String state;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "LOGBOOK_ID")
+    @JoinColumn(name = "LOGBOOK_ID", unique = true)
     private Logbook logbook;
 
     @Column(name = "CONTENT")
@@ -100,6 +110,22 @@ public class OutgoingDocument extends StandardEntity {
     @Column(name = "SENT_WORK_DATE")
     @Temporal(TemporalType.DATE)
     private Date sentWorkDate;
+
+    public Employee getCoordinator() {
+        return coordinator;
+    }
+
+    public void setCoordinator(Employee coordinator) {
+        this.coordinator = coordinator;
+    }
+
+    public State getState() {
+        return state == null ? null : State.fromId(state);
+    }
+
+    public void setState(State state) {
+        this.state = state == null ? null : state.getId();
+    }
 
     public void setDocuments(List<FileDescriptor> documents) {
         this.documents = documents;
@@ -191,14 +217,6 @@ public class OutgoingDocument extends StandardEntity {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public void setCondition(String condition) {
-        this.condition = condition;
-    }
-
-    public String getCondition() {
-        return condition;
     }
 
     public Nomenclature getNomenclatureCase() {

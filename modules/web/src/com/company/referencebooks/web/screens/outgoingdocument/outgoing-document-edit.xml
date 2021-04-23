@@ -5,30 +5,12 @@
         messagesPack="com.company.referencebooks.web.screens.outgoingdocument">
     <data>
         <instance id="outgoingDocumentDc"
-                  class="com.company.referencebooks.entity.OutgoingDocument">
-            <view extends="_local">
-                <property name="typeDocument" view="_minimal"/>
-                <property name="documents" view="_minimal">
-                    <property name="size"/>
-                </property>
-                <property name="company" view="_minimal"/>
-                <property name="executor" view="_minimal"/>
-                <property name="signer" view="_minimal"/>
-                <property name="author" view="_minimal">
-                    <property name="firstName"/>
-                    <property name="lastName"/>
-                    <property name="middleName"/>
-                </property>
-                <property name="logbook" view="_minimal">
-                    <property name="code"/>
-                    <property name="format"/>
-                    <property name="amount"/>
-                </property>
-                <property name="nomenclatureCase" view="_minimal"/>
-            </view>
-            <loader/>
+                  class="com.company.referencebooks.entity.OutgoingDocument"
+                  view="outgoingDocument-editView">
+            <loader id="outgoingDocumentDl"/>
             <collection id="documentsDc" property="documents"/>
         </instance>
+
         <collection id="typeDocumentsDc" class="com.company.referencebooks.entity.TypeDocument" view="_minimal">
             <loader id="typeDocumentsDl">
                 <query>
@@ -36,6 +18,7 @@
                 </query>
             </loader>
         </collection>
+
         <collection id="companiesDc" class="com.company.referencebooks.entity.Company" view="_minimal">
             <loader id="companiesDl">
                 <query>
@@ -44,7 +27,7 @@
             </loader>
         </collection>
 
-        <collection id="executorsDc" class="com.company.referencebooks.entity.Employee" view="_minimal">
+        <collection id="executorsDc" class="com.company.referencebooks.entity.Employee" view="employee-view">
             <loader id="executorsDl">
                 <query>
                     <![CDATA[select e from referencebooks_Employee e]]>
@@ -52,8 +35,16 @@
             </loader>
         </collection>
 
-        <collection id="signersDc" class="com.company.referencebooks.entity.Employee" view="_minimal">
+        <collection id="signersDc" class="com.company.referencebooks.entity.Employee" view="employee-view">
             <loader id="signersDl">
+                <query>
+                    <![CDATA[select e from referencebooks_Employee e]]>
+                </query>
+            </loader>
+        </collection>
+
+        <collection id="coordinatorsDc" class="com.company.referencebooks.entity.Employee" view="employee-view">
+            <loader id="coordinatorsDl">
                 <query>
                     <![CDATA[select e from referencebooks_Employee e]]>
                 </query>
@@ -65,9 +56,19 @@
                     <![CDATA[select e from referencebooks_Nomenclature e]]>
                 </query>
             </loader>
+
+        </collection>
+        <collection id="procTasksDc"
+                    class="com.haulmont.bpm.entity.ProcTask"
+                    view="procTask-browse">
+            <loader id="procTasksDl">
+                <query><![CDATA[select e from bpm$ProcTask e
+                                where e.procInstance.entity.entityId  = :entityId
+                                order by e.createTs]]>
+                </query>
+            </loader>
         </collection>
     </data>
-
 
     <dialogMode height="600"
                 width="800"/>
@@ -84,7 +85,8 @@
                             <lookupPickerField id="companyField" optionsContainer="companiesDc" property="company"/>
                             <textField id="recipientField" property="recipient"/>
                             <textField id="topicField" property="topic"/>
-                            <lookupPickerField id="executorField" optionsContainer="executorsDc" property="executor" editable="false"/>
+                            <lookupPickerField id="executorField" optionsContainer="executorsDc" property="executor"
+                                               editable="false"/>
                             <lookupPickerField id="signerField" optionsContainer="signersDc" property="signer"/>
                             <textField id="notesField" property="notes"/>
                             <textArea id="nameField" property="name" editable="false"/>
@@ -95,18 +97,21 @@
                                 </actions>
                             </pickerField>
                             <dateField id="creationDateField" property="creationDate" editable="false"/>
-                            <dateField id="changingDateField" caption="msg://changingDate" property="changingDate" editable="false"/>
-                            <lookupField id="conditionField" dataContainer="outgoingDocumentDc" property="condition"/>
+                            <dateField id="changingDateField" caption="msg://changingDate" property="changingDate"
+                                       editable="false"/>
+                            <lookupField id="stateField" property="state" editable="false"/>
                         </column>
                     </form>
                 </scrollBox>
             </tab>
 
-            <tab id="registrationTab" caption="msg://registrationTab.caption" margin="true,false,false,false" spacing="true">
+            <tab id="registrationTab" caption="msg://registrationTab.caption" margin="true,false,false,false"
+                 spacing="true">
                 <scrollBox spacing="true">
                     <form dataContainer="outgoingDocumentDc">
                         <column width="350px">
-                            <textField id="registrationNumberFieldDouble" property="registrationNumber" editable="false"/>
+                            <textField id="registrationNumberFieldDouble" property="registrationNumber"
+                                       editable="false"/>
                             <dateField id="registrationDateFieldDouble" property="registrationDate" editable="false"/>
                             <pickerField id="logbookField" property="logbook">
                                 <actions>
@@ -119,14 +124,14 @@
                                                property="nomenclatureCase"/>
                             <dateField id="sentWorkDateField" property="sentWorkDate" editable="false"/>
                         </column>
-                    </form >
+                    </form>
                 </scrollBox>
             </tab>
 
             <tab id="documentsTab" caption="msg://documentsTab.caption" margin="true,false,false,false" spacing="true">
                 <scrollBox id="addFile" spacing="true">
-
-                    <groupBox id="documentsBox" caption="msg://com.company.referencebooks.entity/OutgoingDocument.documents">
+                    <groupBox id="documentsBox"
+                              caption="msg://com.company.referencebooks.entity/OutgoingDocument.documents">
                         <table id="documentsTable" dataContainer="documentsDc" width="100%" height="200px">
                             <actions>
                                 <action id="add" type="add"/>
@@ -136,7 +141,6 @@
                                 <column id="name"/>
                                 <column id="createDate"/>
                                 <column id="extension"/>
-                                <column id="size"/>
                             </columns>
                             <buttonsPanel>
                                 <button action="documentsTable.exclude"/>
@@ -144,9 +148,47 @@
                             </buttonsPanel>
                         </table>
                     </groupBox>
+                </scrollBox>
+            </tab>
+
+            <tab id="approvalTab" caption="msg://approvalTab.caption" margin="true,false,false,false" spacing="true">
+                <scrollBox spacing="true">
+
+                    <form dataContainer="outgoingDocumentDc">
+                        <dateField id="startProcessDateField" caption="msg://startProcessDate.caption" editable="false"/>
+                        <dateField id="endProcessDateField" caption="msg://endProcessDate.caption" editable="false"/>
+                        <lookupField id="stateDoubleField" caption="msg://stateDoubleField.caption" property="state" editable="false"/>
+                        <lookupPickerField id="coordinatorField" optionsContainer="coordinatorsDc" caption="msg://coordinatorField.caption" property="coordinator" required="true" />
+                    </form>
+                    <groupBox id="procActionsBox"
+                              caption="msg://process"
+                              spacing="true"
+                              width="AUTO"
+                              orientation="vertical">
+                        <fragment id="procActionsFragment"
+                                  screen="bpm_ProcActionsFragment"/>
+                    </groupBox>
+
+                    <groupBox caption="msg://tasks.caption"
+                              height="300px"
+                              spacing="true"
+                              width="700px">
+                        <table id="tasksTable"
+                               dataContainer="procTasksDc"
+                               height="100%"
+                               width="100%">
+                            <columns>
+                                <column id="name"/>
+                                <column id="procActor.user.name"/>
+                                <column id="startDate"/>
+                                <column id="endDate"/>
+                                <column id="comment"
+                                        maxTextLength="50"/>
+                            </columns>
+                        </table>
+                    </groupBox>
 
                 </scrollBox>
-
             </tab>
         </tabSheet>
 
@@ -156,3 +198,4 @@
         </hbox>
     </layout>
 </window>
+

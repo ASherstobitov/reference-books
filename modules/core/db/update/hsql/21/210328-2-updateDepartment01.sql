@@ -1,1 +1,0 @@
-alter table REFERENCEBOOKS_DEPARTMENT add column CHILRD_DEPARTMENT_ID varchar(36) ;

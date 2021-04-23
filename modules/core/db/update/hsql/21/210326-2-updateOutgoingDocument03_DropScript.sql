@@ -1,2 +1,0 @@
-alter table REFERENCEBOOKS_OUTGOING_DOCUMENT drop column CONTENT__U93659 cascade ;
-alter table REFERENCEBOOKS_OUTGOING_DOCUMENT drop column RECIEPIENT__U27805 cascade ;

@@ -12,7 +12,9 @@
                     <property name="lastName"/>
                     <property name="middleName"/>
                 </property>
-                <property name="department" view="_minimal"/>
+                <property name="department" view="_minimal">
+                    <property name="manager" view="_minimal"/>
+                </property>
                 <property name="imageFile" view="_minimal"/>
             </view>
             <loader/>

@@ -1,1 +1,0 @@
-drop index IDX_REFERENCEBOOKS_EMPLOYEE ;

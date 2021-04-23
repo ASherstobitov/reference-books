@@ -21,7 +21,7 @@ public class NomenclatureEdit extends StandardEditor<Nomenclature> {
     @Subscribe
     public void onInitEntity(InitEntityEvent<Nomenclature> event) {
         currentNumber = sequenceNumberService.getNextNumber("nomenclature");
-        event.getEntity().setCode("НД00000" + currentNumber);
+        event.getEntity().setCode(String.format("НД00000%s", currentNumber));
     }
 
     @Subscribe("close")
