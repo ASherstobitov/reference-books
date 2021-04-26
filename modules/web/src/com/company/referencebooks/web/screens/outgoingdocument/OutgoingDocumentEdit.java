@@ -19,6 +19,8 @@ import org.apache.commons.lang3.StringUtils;
 import javax.inject.Inject;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.haulmont.bpm.gui.procactionsfragment.ProcActionsFragment;
 
@@ -51,7 +53,7 @@ public class OutgoingDocumentEdit extends StandardEditor<OutgoingDocument> {
     private DataManager dataManager;
 
     @Inject
-    CollectionPropertyContainer<FileDescriptor> documentsDc;
+    private CollectionPropertyContainer<FileDescriptor> documentsDc;
 
     private static final String PROCESS_CODE = "copyOfDocumentApproval2";
 
@@ -89,10 +91,14 @@ public class OutgoingDocumentEdit extends StandardEditor<OutgoingDocument> {
     private CurrentDocumentStateService currentDocumentStateService;
 
     @Inject
-    private PickerField<Logbook> logbookField;
+    private LookupPickerField<Logbook> logbookField;
 
     @Subscribe
     private void onBeforeShow(BeforeShowEvent event) {
+
+        if (getEditedEntity().getState() != State.NEW) {
+            coordinatorField.setEditable(false);
+        }
 
         outgoingDocumentDl.load();
         procTasksDl.setParameter("entityId", outgoingDocumentDc.getItem().getId());
@@ -123,7 +129,6 @@ public class OutgoingDocumentEdit extends StandardEditor<OutgoingDocument> {
             procTasksDl.load();
             getEditedEntity().setState(State.APPROVAL);
             procActionsFragment.getFragment().setEnabled(false);
-            dataManager.commit(getEditedEntity());
         })
                 .setAfterCompleteTaskListener(() -> {
                     procTasksDl.load();
@@ -157,6 +162,13 @@ public class OutgoingDocumentEdit extends StandardEditor<OutgoingDocument> {
 
         List<ProcTask> procTasks = procTasksDc.getMutableItems();
 
+        if (getEditedEntity().getState() == State.REGISTRATION
+                && countTasksForCurrentUser() > 0) {
+            logbookField.setEnabled(true);
+            logbookField.setRequired(true);
+        } else
+            logbookField.setEnabled(false);
+
         if (procTasks.size() != 0) {
             startProcessDateField.setValue(procTasks.get(0).getStartDate());
         }
@@ -166,27 +178,8 @@ public class OutgoingDocumentEdit extends StandardEditor<OutgoingDocument> {
             endProcessDateField.setValue(procTasks.get(procTasks.size() - 1).getEndDate());
         }
 
-        User user = userSessionSource.getUserSession().getCurrentOrSubstitutedUser();
-
-        Long countActualTasksForCurrentUser = procTasks.stream()
-                .filter(procTask -> procTask.getEndDate() == null)
-                .filter(procTask -> procTask.getProcActor().getUser().getUuid().equals(user.getUuid())).count();
-
-        if (countActualTasksForCurrentUser > 0) {
+        if (countTasksForCurrentUser() > 0) {
             procActionsFragment.getFragment().setEnabled(true);
-        }
-
-        if (getEditedEntity().getState() == State.REGISTRATION
-                && getEditedEntity().getRegistrationNumber() == null
-                && countActualTasksForCurrentUser > 0) {
-            logbookField.setEnabled(true);
-            logbookField.setRequired(true);
-        } else
-            logbookField.setEnabled(false);
-
-
-        if (getEditedEntity().getState() != State.NEW) {
-            coordinatorField.setEditable(false);
         }
 
         OutgoingDocument document = event.getSource().getItem();
@@ -237,15 +230,27 @@ public class OutgoingDocumentEdit extends StandardEditor<OutgoingDocument> {
     @Subscribe("logbookField")
     public void onLogbookFieldValueChange(HasValue.ValueChangeEvent<Logbook> event) {
 
-        if (event.getValue() != null && getEditedEntity().getRegistrationNumber() == null) {
+        if (event.getValue() != null && getEditedEntity().getState() == State.REGISTRATION
+                && countTasksForCurrentUser() > 0) {
             String[] arr = event.getValue().getFormat().split(" - ");
             getEditedEntity().setRegistrationDate(new Date());
             String pattern = arr[1].contains("DD") ? arr[1].replace("DD", "dd") : arr[1];
             String newDate = new SimpleDateFormat(pattern).format(new Date());
             if (currentNumber != null) {
-                sequenceNumberService.setCurrentNumber("outGoingDocument", currentNumber);
+                sequenceNumberService.setCurrentNumber("outGoingDocument", currentNumber - 1);
+            } else if (getEditedEntity().getRegistrationNumber() != null) {
+                String[]  tempArr = getEditedEntity().getRegistrationNumber().split(" - ");
+                Pattern patternStr = Pattern.compile("[1-9]");
+                Matcher matcher = patternStr.matcher(tempArr[2]);
+                int index = 0;
+                if (matcher.find())
+                    index = matcher.start();
+                StringBuilder str = new StringBuilder(tempArr[2].substring(index));
+                currentNumber = Long.parseLong(str.toString());
+            } else {
+                currentNumber = sequenceNumberService.getNextNumber("outGoingDocument");
             }
-            currentNumber = sequenceNumberService.getNextNumber("outGoingDocument");
+
             String strCurrentNum = String.valueOf(currentNumber);
             int lengthNum = event.getValue().getAmount() != null ? (int) (event.getValue().getAmount() - 1) : 0;
 
@@ -253,14 +258,6 @@ public class OutgoingDocumentEdit extends StandardEditor<OutgoingDocument> {
             String formattedNumber = String.format("%s - %s - %s%s", arr[0], newDate, nulls, strCurrentNum);
             getEditedEntity().setRegistrationNumber(formattedNumber);
         }
-    }
-
-    @Subscribe("logbookField.clear")
-    public void onLogbookFieldClear(Action.ActionPerformedEvent event) {
-        getEditedEntity().setRegistrationNumber(null);
-        getEditedEntity().setRegistrationDate(null);
-        getEditedEntity().setLogbook(null);
-        sequenceNumberService.setCurrentNumber("outGoingDocument", currentNumber);
     }
 
     @Subscribe
@@ -285,6 +282,15 @@ public class OutgoingDocumentEdit extends StandardEditor<OutgoingDocument> {
             getEditedEntity().setState(currentDocumentStateService.setCurrentState(lastProcTasks.getName()));
         }
         return lastProcTasks;
+    }
+
+    private Long countTasksForCurrentUser() {
+        User user = userSessionSource.getUserSession().getCurrentOrSubstitutedUser();
+        List <ProcTask> procTasks  = procTasksDc.getMutableItems();
+        Long countActualTasksForCurrentUser = procTasks.stream()
+                .filter(procTask -> procTask.getEndDate() == null)
+                .filter(procTask -> procTask.getProcActor().getUser().getUuid().equals(user.getUuid())).count();
+        return countActualTasksForCurrentUser;
     }
 }
 

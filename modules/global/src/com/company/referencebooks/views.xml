@@ -30,10 +30,13 @@
         </property>
         <property name="logbook" view="_minimal">
             <property name="format"/>
+            <property name="code"/>
+            <property name="amount"/>
         </property>
         <property name="nomenclatureCase" view="_minimal"/>
     </view>
     <view entity="referencebooks_Employee" name="employee-view" extends="_base">
         <property name="user" view="_minimal"/>
     </view>
+    <view entity="referencebooks_Logbook" name="logbook-view" extends="_local"/>
 </views>
