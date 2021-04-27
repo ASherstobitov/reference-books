@@ -11,21 +11,19 @@ public class SequenceNumberServiceBean implements SequenceNumberService {
     @Inject
     private UniqueNumbersAPI uniqueNumbersAPI;
 
+    /**
+     * Get the next number
+     * @retunt The next number of a sequence
+     * */
     @Override
     public Long getNextNumber(String domain) {
         return uniqueNumbersAPI.getNextNumber(domain);
     }
 
-    @Override
-    public Long getCurrentNumber(String domain) {
-        return uniqueNumbersAPI.getCurrentNumber(domain);
-    }
-
-    @Override
-    public void deleteSeq(String domain) {
-        uniqueNumbersAPI.deleteSequence(domain);
-    }
-
+    /**
+     * Set a current number
+     * Set the current number of a number's sequence
+     * */
     @Override
     public void setCurrentNumber(String domain, long value) {
         uniqueNumbersAPI.setCurrentNumber(domain, value);

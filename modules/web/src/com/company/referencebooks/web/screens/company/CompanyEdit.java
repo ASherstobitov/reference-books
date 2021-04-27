@@ -21,7 +21,7 @@ public class CompanyEdit extends StandardEditor<Company> {
     @Subscribe
     public void onInitEntity(InitEntityEvent<Company> event) {
         currentNumber = sequenceNumberService.getNextNumber("company");
-        event.getEntity().setCode("ОРГ00000" + currentNumber);
+        event.getEntity().setCode(String.format("ОРГ00000%d", currentNumber));
     }
 
     @Subscribe("close")

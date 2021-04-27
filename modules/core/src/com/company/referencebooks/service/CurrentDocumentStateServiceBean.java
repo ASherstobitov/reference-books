@@ -10,26 +10,21 @@ public class CurrentDocumentStateServiceBean implements CurrentDocumentStateServ
     public State setCurrentState(String procTaskName) {
         return getState(procTaskName);
     }
-
+    /**
+     * Get a state
+     * This method set required state by a process task name
+     * */
     private State getState(String nameState) {
         State state = null;
-
-        switch (nameState) {
-            case "Согласование (менеджер)":
-            case "Согласующие":
-                state = State.APPROVAL;
-                break;
-            case "Доработка (инициатор)":
-                state = State.REWORKING;
-                break;
-            case "Подписант":
-                state = State.SIGNING;
-                break;
-            case "Регистрация (инициатор)":
-                state = State.REGISTRATION;
-                break;
+        if (nameState.equals("Согласование (менеджер)") || nameState.equals("Согласование (менеджер)")) {
+            state = State.APPROVAL;
+        } else if (nameState.equals("Доработка (инициатор)")) {
+            state = State.REWORKING;
+        } else if (nameState.equals("Подписант")) {
+            state = State.SIGNING;
+        } else if (nameState.equals("Регистрация (инициатор)")) {
+            state = State.REGISTRATION;
         }
         return state;
     }
-
 }

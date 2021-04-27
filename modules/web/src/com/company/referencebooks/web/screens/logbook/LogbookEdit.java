@@ -23,7 +23,7 @@ public class LogbookEdit extends StandardEditor<Logbook> {
     @Subscribe
     public void onInitEntity(InitEntityEvent<Logbook> event) {
         currentNumber = sequenceNumberService.getNextNumber("logbook");
-        event.getEntity().setCode(String.format("Ж00000%s", currentNumber));
+        event.getEntity().setCode(String.format("Ж00000%d", currentNumber));
     }
 
     @Subscribe("close")

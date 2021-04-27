@@ -107,40 +107,17 @@ public class OutgoingDocumentEdit extends StandardEditor<OutgoingDocument> {
                 .standard()
                 .setBeforeStartProcessPredicate(() -> {
                     ProcInstance procInstance = procActionsFragment.getProcInstance();
-                    ProcActor initiatorProcActor = createProcActor("initiator", procInstance, getEditedEntity().getAuthor());
-                    ProcActor managerProcActor = null;
-                    try {
-                        managerProcActor = createProcActor("manager", procInstance, getEditedEntity().getExecutor().getDepartment().getManager().getUser());
-                    } catch (RuntimeException e) {
-                        notifications.create(Notifications.NotificationType.ERROR)
-                                .withCaption("У вашего подразделения не указан менеджер").show();
-                        throw new RuntimeException("У вашего подразделения не указан менеджер");
-                    }
-                    ProcActor coordinatorsProcActor = createProcActor("coordinators", procInstance, getEditedEntity().getCoordinator().getUser());
-                    ProcActor signerProcActor = createProcActor("signer", procInstance, getEditedEntity().getSigner().getUser());
-                    Set<ProcActor> procActors = new HashSet<>();
-                    procActors.add(initiatorProcActor);
-                    procActors.add(managerProcActor);
-                    procActors.add(coordinatorsProcActor);
-                    procActors.add(signerProcActor);
-                    procInstance.setProcActors(procActors);
-                    return true;
-                }).setAfterStartProcessListener(() -> {
-            procTasksDl.load();
-            getEditedEntity().setState(State.APPROVAL);
-            procActionsFragment.getFragment().setEnabled(false);
-        })
+                    return addProcActors(procInstance);
+                })
+                .setAfterStartProcessListener(() -> {
+                    procTasksDl.load();
+                    getEditedEntity().setState(State.APPROVAL);
+                    procActionsFragment.getFragment().setEnabled(false);
+                })
                 .setAfterCompleteTaskListener(() -> {
                     procTasksDl.load();
                     procActionsFragment.getFragment().setEnabled(false);
-                    ProcTask procTask = getCurrentState();
-
-                    if (procTask.getOutcome() != null && procTask.getOutcome().equals("Зарегистрировать")) {
-                        getEditedEntity().setState(State.REGISTERED);
-                    } else if (procTask.getOutcome() != null && procTask.getOutcome().equals("Отменить")) {
-                        getEditedEntity().setState(State.CANCELED);
-                    }
-                    dataManager.commit(getEditedEntity());
+                    setFinalState(setCurrentState());
                 })
                 .init(PROCESS_CODE, getEditedEntity());
     }
@@ -159,25 +136,19 @@ public class OutgoingDocumentEdit extends StandardEditor<OutgoingDocument> {
 
     @Subscribe(id = "outgoingDocumentDc", target = Target.DATA_CONTAINER)
     public void updateFields(InstanceContainer.ItemPropertyChangeEvent<OutgoingDocument> event) {
-
         List<ProcTask> procTasks = procTasksDc.getMutableItems();
-
-        if (getEditedEntity().getState() == State.REGISTRATION
-                && countTasksForCurrentUser() > 0) {
+        if (isRegistration() && countTasksForCurrentUser() > 0) {
             logbookField.setEnabled(true);
             logbookField.setRequired(true);
         } else
             logbookField.setEnabled(false);
-
         if (procTasks.size() != 0) {
             startProcessDateField.setValue(procTasks.get(0).getStartDate());
         }
-
-        if (getEditedEntity().getState() == State.REGISTERED || getEditedEntity().getState() == State.CANCELED) {
+        if (isRegistration() || getEditedEntity().getState() == State.CANCELED) {
             procActionsFragment.getFragment().setEnabled(false);
             endProcessDateField.setValue(procTasks.get(procTasks.size() - 1).getEndDate());
         }
-
         if (countTasksForCurrentUser() > 0) {
             procActionsFragment.getFragment().setEnabled(true);
         }
@@ -230,8 +201,7 @@ public class OutgoingDocumentEdit extends StandardEditor<OutgoingDocument> {
     @Subscribe("logbookField")
     public void onLogbookFieldValueChange(HasValue.ValueChangeEvent<Logbook> event) {
 
-        if (event.getValue() != null && getEditedEntity().getState() == State.REGISTRATION
-                && countTasksForCurrentUser() > 0) {
+        if (event.getValue() != null && isRegistration() && countTasksForCurrentUser() > 0) {
             String[] arr = event.getValue().getFormat().split(" - ");
             getEditedEntity().setRegistrationDate(new Date());
             String pattern = arr[1].contains("DD") ? arr[1].replace("DD", "dd") : arr[1];
@@ -239,7 +209,7 @@ public class OutgoingDocumentEdit extends StandardEditor<OutgoingDocument> {
             if (currentNumber != null) {
                 sequenceNumberService.setCurrentNumber("outGoingDocument", currentNumber - 1);
             } else if (getEditedEntity().getRegistrationNumber() != null) {
-                String[]  tempArr = getEditedEntity().getRegistrationNumber().split(" - ");
+                String[] tempArr = getEditedEntity().getRegistrationNumber().split(" - ");
                 Pattern patternStr = Pattern.compile("[1-9]");
                 Matcher matcher = patternStr.matcher(tempArr[2]);
                 int index = 0;
@@ -250,13 +220,9 @@ public class OutgoingDocumentEdit extends StandardEditor<OutgoingDocument> {
             } else {
                 currentNumber = sequenceNumberService.getNextNumber("outGoingDocument");
             }
-
-            String strCurrentNum = String.valueOf(currentNumber);
             int lengthNum = event.getValue().getAmount() != null ? (int) (event.getValue().getAmount() - 1) : 0;
-
             String nulls = StringUtils.repeat('0', lengthNum);
-            String formattedNumber = String.format("%s - %s - %s%s", arr[0], newDate, nulls, strCurrentNum);
-            getEditedEntity().setRegistrationNumber(formattedNumber);
+            getEditedEntity().setRegistrationNumber(String.format("%s - %s - %s%d", arr[0], newDate, nulls, currentNumber));
         }
     }
 
@@ -274,7 +240,7 @@ public class OutgoingDocumentEdit extends StandardEditor<OutgoingDocument> {
         return procActor;
     }
 
-    private ProcTask getCurrentState() {
+    private ProcTask setCurrentState() {
         List<ProcTask> procTasks = procTasksDl.getContainer().getMutableItems();
         ProcTask lastProcTasks = null;
         if (procTasks.size() != 0) {
@@ -286,11 +252,44 @@ public class OutgoingDocumentEdit extends StandardEditor<OutgoingDocument> {
 
     private Long countTasksForCurrentUser() {
         User user = userSessionSource.getUserSession().getCurrentOrSubstitutedUser();
-        List <ProcTask> procTasks  = procTasksDc.getMutableItems();
+        List<ProcTask> procTasks = procTasksDc.getMutableItems();
         Long countActualTasksForCurrentUser = procTasks.stream()
                 .filter(procTask -> procTask.getEndDate() == null)
                 .filter(procTask -> procTask.getProcActor().getUser().getUuid().equals(user.getUuid())).count();
         return countActualTasksForCurrentUser;
+    }
+
+    private boolean addProcActors(ProcInstance procInstance) {
+        ProcActor initiatorProcActor = createProcActor("initiator", procInstance, getEditedEntity().getAuthor());
+        ProcActor managerProcActor = null;
+        try {
+            managerProcActor = createProcActor("manager", procInstance, getEditedEntity().getExecutor().getDepartment().getManager().getUser());
+        } catch (NullPointerException e) {
+            notifications.create(Notifications.NotificationType.ERROR)
+                    .withCaption("У вашего подразделения не указан менеджер").show();
+            managerProcActor = createProcActor("manager", procInstance, null);
+        }
+        ProcActor coordinatorsProcActor = createProcActor("coordinators", procInstance, getEditedEntity().getCoordinator().getUser());
+        ProcActor signerProcActor = createProcActor("signer", procInstance, getEditedEntity().getSigner().getUser());
+        Set<ProcActor> procActors = new HashSet<>();
+        procActors.add(initiatorProcActor);
+        procActors.add(managerProcActor);
+        procActors.add(coordinatorsProcActor);
+        procActors.add(signerProcActor);
+        procInstance.setProcActors(procActors);
+        return true;
+    }
+
+    private boolean isRegistration() {
+        return getEditedEntity().getState() == State.REGISTRATION;
+    }
+
+    private void setFinalState(ProcTask procTask) {
+        if (procTask.getOutcome() != null && procTask.getOutcome().equals("Зарегистрировать")) {
+            getEditedEntity().setState(State.REGISTERED);
+        } else if (procTask.getOutcome() != null && procTask.getOutcome().equals("Отменить")) {
+            getEditedEntity().setState(State.CANCELED);
+        }
     }
 }
 
