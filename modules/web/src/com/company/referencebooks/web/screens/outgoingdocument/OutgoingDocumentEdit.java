@@ -261,7 +261,9 @@ public class OutgoingDocumentEdit extends StandardEditor<OutgoingDocument> {
 
     private boolean addProcActors(ProcInstance procInstance) {
         ProcActor initiatorProcActor = createProcActor("initiator", procInstance, getEditedEntity().getAuthor());
-        ProcActor managerProcActor = null;
+        ProcActor managerProcActor;
+        ProcActor coordinatorsProcActor;
+        ProcActor signerProcActor;
         try {
             managerProcActor = createProcActor("manager", procInstance, getEditedEntity().getExecutor().getDepartment().getManager().getUser());
         } catch (NullPointerException e) {
@@ -269,8 +271,20 @@ public class OutgoingDocumentEdit extends StandardEditor<OutgoingDocument> {
                     .withCaption("У вашего подразделения не указан менеджер").show();
             managerProcActor = createProcActor("manager", procInstance, null);
         }
-        ProcActor coordinatorsProcActor = createProcActor("coordinators", procInstance, getEditedEntity().getCoordinator().getUser());
-        ProcActor signerProcActor = createProcActor("signer", procInstance, getEditedEntity().getSigner().getUser());
+        try {
+         coordinatorsProcActor = createProcActor("coordinators", procInstance, getEditedEntity().getCoordinator().getUser());
+        } catch (NullPointerException e) {
+            notifications.create(Notifications.NotificationType.ERROR)
+                    .withCaption("Вы не выбрали согласующего").show();
+            coordinatorsProcActor = createProcActor("coordinators", procInstance, null);
+        }
+        try {
+            signerProcActor = createProcActor("signer", procInstance, getEditedEntity().getSigner().getUser());
+        } catch (NullPointerException e) {
+            notifications.create(Notifications.NotificationType.ERROR)
+                    .withCaption("Вы не выбрали подписанта").show();
+            signerProcActor = createProcActor("signer", procInstance, null);
+        }
         Set<ProcActor> procActors = new HashSet<>();
         procActors.add(initiatorProcActor);
         procActors.add(managerProcActor);
